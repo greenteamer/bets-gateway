@@ -1,52 +1,39 @@
 import uuidv4 from 'uuid/v4'; 
 
 
-export const messageQuery = {
-  messages: (parent, args, { models }) => {
-    return Object.values(models.messages);
+export default {
+  Message: {
+    user: async (message, args, { models }) => {
+      return await models.User.findById(message.userId);
+    },
   },
-  message: (parent, { id }, { models }) => {
-    return models.messages[id];
+
+  Query: {
+    messages: async (parent, args, { models }) => {
+      return await models.Message.findAll();
+    },
+    message: async (parent, { id }, { models }) => {
+      return await models.Message.findById(id);
+    },
   },
-};
 
-export const messageMutation = {
-  createMessage: (parent, { text }, { models, me }) => {
-    const id = uuidv4();
-    const message = {
-      id,
-      text,
-      userId: me.id,
-    }
-
-    models.messages[id] = message;
-    models.users[me.id].messageIds.push(id);
-
-    return message;
-  },
-  deleteMessage: (parent, { id }, { models, me }) => {
-    const { [id]: message, ...otherMessages } = models.messages;
-
-    if (!message) {
-      return false;
-    }
-
-    models.messages = otherMessages;
-
-    return true;
-  },
-  updateMessage: (parent, { id, text }, { models, me }) => {
-    const { [id]: message, ...otherMessages } = models.messages;
-    if (message.userId !== me.id) {
-      return false;
-    }
-    message.text = text;
-    return true;
-  },
-};
-
-export const messageFields = {
-  user: (message, args, { models }) => {
-    return models.users[message.userId];
-  },
+  Mutation: {
+    createMessage: async (parent, { text }, { models, me }) => {
+      return await models.Message.create({
+        text,
+        userId: me.id,
+      });
+    },
+    deleteMessage: async (parent, { id }, { models, me }) => {
+      return await models.Message.destroy({ where: { id }});
+    },
+    updateMessage: async (parent, { id, text }, { models, me }) => {
+      return await models.Message.update({
+        text,
+      },
+      {
+        where: { id },
+      })
+    },
+  }
 };
