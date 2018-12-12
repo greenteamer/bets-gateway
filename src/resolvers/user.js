@@ -1,3 +1,14 @@
+import jwt from 'jsonwebtoken';
+import { AuthenticationError, UserInputError } from 'apollo-server';
+
+
+const createToken = async (user, secret, expiresIn) => {
+  const { id, email, username } = user;
+  return await jwt.sign({ id, email, username }, secret, {
+    expiresIn,
+  });
+};
+
 export default {
   User: {
     // username: user => `${user.firstName} ${user.lastName}`,
@@ -11,7 +22,10 @@ export default {
   },
 
   Query: {
-    me: async (parent, args, { me }) => {
+    me: async (parent, args, { models, me }) => {
+      if (!me) {
+        return null;
+      }
       return await models.User.findById(me.id);
     },
     user: async (parent, { id }, { models }) => {
@@ -20,5 +34,42 @@ export default {
     users: async (parent, args, { models }) => {
       return await models.User.findAll();
     },
-  }
-}
+  },
+
+  Mutation: {
+    signUp: async (
+      parent,
+      { username, email, password },
+      { models, secret },
+    ) => {
+      const result = await models.User.create({ username, email, password });
+      if (result && result.dataValues) {
+        const { id, username, email } = result.dataValues;
+        console.log('>>>> create user resolver user: ', { id, username, email });
+        return { token: createToken({ id, username, email }, secret, '30m') };
+      }
+    },
+
+    signIn: async (
+      parent,
+      { login, password },
+      { models, secret }
+    ) => {
+      const user = await models.User.findByLogin(login);
+
+      if (!user) {
+        throw new UserInputError(
+          'No user found with this login credentials.',
+        );
+      }
+
+      const isValid = await user.validatePassword(password);
+
+      if (!isValid) {
+        throw new AuthenticationError('Invalid password.');
+      }
+
+      return { token: createToken(user, secret, '30m') };
+    }
+  },
+};
