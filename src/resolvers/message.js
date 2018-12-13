@@ -1,5 +1,5 @@
 import uuidv4 from 'uuid/v4';
-import { isAuthenticated } from './authorization';
+import { isAuthenticated, isMessageOwner } from './authorization';
 import { combineResolvers } from 'graphql-resolvers';
 
 
@@ -29,23 +29,31 @@ export default {
         });
       },
     ),
-    deleteMessage: async (parent, { id }, { models, me }) => {
-      return await models.Message.destroy({ where: { id }});
-    },
-    updateMessage: async (parent, { id, text }, { models, me }) => {
-      const result = await models.Message.update({
-          text,
-        },
-        {
-          where: { id },
-          returning: true,
-          plain: true,
+    deleteMessage: combineResolvers(
+      isAuthenticated,
+      isMessageOwner,
+      async (parent, { id }, { models, me }) => {
+        return await models.Message.destroy({ where: { id }});
+      },
+    ),
+    updateMessage: combineResolvers( 
+      isAuthenticated,
+      isMessageOwner,
+      async (parent, { id, text }, { models, me }) => {
+        const result = await models.Message.update({
+            text,
+          },
+          {
+            where: { id },
+            returning: true,
+            plain: true,
+          }
+        );
+        if (result && result[1]) {
+          return result[1].dataValues;
         }
-      );
-      if (result && result[1]) {
-        return result[1].dataValues;
-      }
-      return null;
-    },
+        return null;
+      },
+    ),
   }
 };
