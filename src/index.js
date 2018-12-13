@@ -21,7 +21,6 @@ const getMe = async req => {
   if (token) {
     try {
       const me = await jwt.verify(token, process.env.SECRET);
-      console.log('>>>> getMe me: ', { me });
       return me;
     } catch (e) {
       throw new AuthenticationError(
@@ -47,7 +46,7 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app, path: '/graphql' });
 
-const eraseDatabaseOnSync = false;
+const eraseDatabaseOnSync = true;
 
 sequelize.sync({ force: eraseDatabaseOnSync })
   .then(async () => {

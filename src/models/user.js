@@ -28,6 +28,13 @@ const user = (sequelize, DataTypes) => {
         len: [7, 42],
       },
     },
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
   });
 
   User.associate = models => {
@@ -44,7 +51,6 @@ const user = (sequelize, DataTypes) => {
         where: { email: login },
       })
     }
-
 
     return user;
   };
