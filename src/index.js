@@ -51,7 +51,7 @@ const eraseDatabaseOnSync = true;
 sequelize.sync({ force: eraseDatabaseOnSync })
   .then(async () => {
     if (eraseDatabaseOnSync) {
-      createUsersWithMessages();
+      createUsersWithMessages(new Date());
     }
     app.listen({ port: 5000 }, () => {
       console.log('Apollo Server on http://localhost:5000/graphql');

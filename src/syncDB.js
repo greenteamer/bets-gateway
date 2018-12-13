@@ -2,7 +2,7 @@ import models, { sequelize } from './models';
 import { ROLES } from './constants';
 
 
-export const createUsersWithMessages = async () => {
+export const createUsersWithMessages = async date => {
   await models.User.create(
     {
       username: 'aleks',
@@ -12,6 +12,7 @@ export const createUsersWithMessages = async () => {
       messages: [
         {
           text: 'Admin message',
+          createdAt: date.setSeconds(date.getSeconds() + 1),
         },
       ],
     },
@@ -29,6 +30,7 @@ export const createUsersWithMessages = async () => {
       messages: [
         {
           text: 'Published the Road to learn React',
+          createdAt: date.setSeconds(date.getSeconds() + 1),
         },
       ],
     },
@@ -46,9 +48,11 @@ export const createUsersWithMessages = async () => {
       messages: [
         {
           text: 'Happy to release ...',
+          createdAt: date.setSeconds(date.getSeconds() + 1),
         },
         {
           text: 'Published a complete ...',
+          createdAt: date.setSeconds(date.getSeconds() + 1),
         },
       ],
     },

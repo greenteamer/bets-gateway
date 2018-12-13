@@ -14,7 +14,6 @@ const createToken = async (user, secret, expiresIn) => {
 
 export default {
   User: {
-    // username: user => `${user.firstName} ${user.lastName}`,
     messages: async (user, args, { models }) => {
       return await models.Message.findAll({
         where: {
