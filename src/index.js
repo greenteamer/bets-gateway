@@ -13,12 +13,19 @@ import { createUsersWithMessages } from './syncDB';
 
 const app = express();
 
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true,
+};
 app.use(cors());
 
 const getMe = async req => {
-  const token = req.headers['x-token'];
+  console.log('>>> getMe start');
+  const token = req.headers['authorization'];
+  console.log('>>> getMe token: ', { token })
 
   if (token) {
+    console.log('>>> token still  exist: ', { token })
     try {
       const me = await jwt.verify(token, process.env.SECRET);
       return me;

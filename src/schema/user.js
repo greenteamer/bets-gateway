@@ -14,6 +14,11 @@ export default gql`
     token: String!
   }
 
+  type AuthType {
+    token: String!
+    me: User!
+  }
+
   extend type Query {
     me: User
     user(id: ID!): User
@@ -31,7 +36,7 @@ export default gql`
     signIn(
       login: String!
       password: String!
-    ): Token!
+    ): AuthType!
 
     deleteUser(id: ID!): Boolean!
   }

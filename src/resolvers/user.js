@@ -48,7 +48,7 @@ export default {
       if (result && result.dataValues) {
         const { id, username, email } = result.dataValues;
         console.log('>>>> create user resolver user: ', { id, username, email });
-        return { token: createToken({ id, username, email }, secret, '30m') };
+        return { token: createToken({ id, username, email }, secret, '20m') };
       }
     },
 
@@ -71,7 +71,10 @@ export default {
         throw new AuthenticationError('Invalid password.');
       }
 
-      return { token: createToken(user, secret, '30m') };
+      return {
+        token: createToken(user, secret, '20m'),
+        me: user,
+      };
     },
 
     deleteUser: combineResolvers( 

@@ -11,9 +11,16 @@ export default {
   },
 
   Query: {
-    messages: async (parent, args, { models }) => {
-      return await models.Message.findAll();
-    },
+    // messages: async (parent, args, { models }) => {
+    //   return await models.Message.findAll();
+    // },
+    messages: combineResolvers(
+      isAuthenticated,
+      async (parent, args, { models }) => {
+        console.log('>>> mes')
+        return await models.Message.findAll();
+      },
+    ),
     message: async (parent, { id }, { models }) => {
       return await models.Message.findById(id);
     },
@@ -23,10 +30,15 @@ export default {
     createMessage: combineResolvers(
       isAuthenticated,
       async (parent, { text }, { models, me }) => {
-        return await models.Message.create({
+        const newMessage = await models.Message.create({
           text,
           userId: me.id,
         });
+        const user = models.User.findById(me.id);
+        return {
+          message: newMessage,
+          me: user,
+        }
       },
     ),
     deleteMessage: combineResolvers(
