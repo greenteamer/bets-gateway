@@ -5,7 +5,7 @@ import { ROLES } from './constants';
 export const createUsersWithMessages = async date => {
   await models.User.create(
     {
-      username: 'aleks',
+      username: 'admin',
       email: 'teamer777@gmail.com',
       password: 'qweqwe123',
       role: ROLES.ADMIN,
@@ -25,7 +25,7 @@ export const createUsersWithMessages = async date => {
     {
       username: 'agent',
       email: 'hello@robin.com',
-      password: 'rwieruch',
+      password: 'qweqwe123',
       role: ROLES.AGENT,
       messages: [
         {
@@ -43,7 +43,7 @@ export const createUsersWithMessages = async date => {
     {
       username: 'player',
       email: 'hello@david.com',
-      password: 'ddavids',
+      password: 'qweqwe123',
       role: ROLES.PLAYER,
       messages: [
         {

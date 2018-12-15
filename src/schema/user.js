@@ -8,6 +8,7 @@ export default gql`
     email: String!
     role: String!
     messages: [Message!]
+    players: [User!]
   }
 
   type Token {
@@ -31,7 +32,7 @@ export default gql`
       email: String!
       password: String!
       role: String!
-    ): Token!
+    ): User!
 
     signIn(
       login: String!

@@ -3,6 +3,7 @@ import { AuthenticationError, UserInputError } from 'apollo-server';
 import { combineResolvers } from 'graphql-resolvers';
 
 import { isAdmin } from './authorization';
+import { ROLES } from '../constants';
 
 
 const createToken = async (user, secret, expiresIn) => {
@@ -18,6 +19,13 @@ export default {
       return await models.Message.findAll({
         where: {
           userId: user.id,
+        }
+      });
+    },
+    players: async (user, args, { models }) => {
+      return await models.User.findAll({
+        where: {
+          role: ROLES.PLAYER,
         }
       });
     },
@@ -41,14 +49,20 @@ export default {
   Mutation: {
     signUp: async (
       parent,
-      { username, email, password },
+      { username, email, password, role },
       { models, secret },
     ) => {
-      const result = await models.User.create({ username, email, password });
+      const result = await models.User.create({ username, email, password, role });
       if (result && result.dataValues) {
         const { id, username, email } = result.dataValues;
-        console.log('>>>> create user resolver user: ', { id, username, email });
-        return { token: createToken({ id, username, email }, secret, '20m') };
+        // console.log('>>>> create user resolver user: ', { id, username, email });
+        // return { token: createToken({ id, username, email, role }, secret, '20m') };
+        return {
+          id,
+          username,
+          email,
+          role,
+        };
       }
     },
 
@@ -72,7 +86,7 @@ export default {
       }
 
       return {
-        token: createToken(user, secret, '20m'),
+        token: createToken(user, secret, '1d'),
         me: user,
       };
     },
