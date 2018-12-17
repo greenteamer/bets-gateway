@@ -20,12 +20,9 @@ const corsOptions = {
 app.use(cors());
 
 const getMe = async req => {
-  console.log('>>> getMe start');
   const token = req.headers['authorization'];
-  console.log('>>> getMe token: ', { token })
 
   if (token) {
-    console.log('>>> token still  exist: ', { token })
     try {
       const me = await jwt.verify(token, process.env.SECRET);
       return me;
@@ -53,7 +50,7 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app, path: '/graphql' });
 
-const eraseDatabaseOnSync = true;
+const eraseDatabaseOnSync = false;
 
 sequelize.sync({ force: eraseDatabaseOnSync })
   .then(async () => {

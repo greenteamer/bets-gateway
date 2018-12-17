@@ -1,4 +1,4 @@
-const message = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   const Message = sequelize.define('message', {
     id: {
       type: DataTypes.UUID,
@@ -17,5 +17,3 @@ const message = (sequelize, DataTypes) => {
 
   return Message;
 }
-
-export default message;

@@ -2,13 +2,13 @@ import jwt from 'jsonwebtoken';
 import { AuthenticationError, UserInputError } from 'apollo-server';
 import { combineResolvers } from 'graphql-resolvers';
 
-import { isAdmin } from './authorization';
+import { isAdmin, authByRoles } from './authorization';
 import { ROLES } from '../constants';
 
 
 const createToken = async (user, secret, expiresIn) => {
-  const { id, email, username, role } = user;
-  return await jwt.sign({ id, email, username, role }, secret, {
+  const { id, email, username, role, agentId } = user;
+  return await jwt.sign({ id, email, username, role, agentId }, secret, {
     expiresIn,
   });
 };
@@ -22,12 +22,11 @@ export default {
         }
       });
     },
-    players: async (user, args, { models }) => {
-      return await models.User.findAll({
-        where: {
-          role: ROLES.PLAYER,
-        }
-      });
+    players: async (user, args, context) => {
+      return await user.getPlayers();
+    },
+    bets: async (user, args, context) => {
+      return await user.getBets();
     },
   },
 
@@ -47,24 +46,26 @@ export default {
   },
 
   Mutation: {
-    signUp: async (
-      parent,
-      { username, email, password, role },
-      { models, secret },
-    ) => {
-      const result = await models.User.create({ username, email, password, role });
-      if (result && result.dataValues) {
-        const { id, username, email } = result.dataValues;
-        // console.log('>>>> create user resolver user: ', { id, username, email });
-        // return { token: createToken({ id, username, email, role }, secret, '20m') };
-        return {
-          id,
-          username,
-          email,
-          role,
-        };
-      }
-    },
+    signUp: combineResolvers( 
+      authByRoles([ROLES.AGENT, ROLES.ADMIN]),
+      async (
+        parent,
+        { username, email, password, role, agentId },
+        { models, secret },
+      ) => {
+        const result = await models.User.create({ username, email, password, role, agentId });
+        if (result && result.dataValues) {
+          const { id, username, email, agentId } = result.dataValues;
+          return {
+            id,
+            agentId,
+            username,
+            email,
+            role,
+          };
+        }
+      },
+    ),
 
     signIn: async (
       parent,
@@ -84,9 +85,12 @@ export default {
       if (!isValid) {
         throw new AuthenticationError('Invalid password.');
       }
+      const token = createToken(user, secret, '1d');
+      // const decrypted = jwt.valid
+      // console.log('>>>> user: ', { user })
 
       return {
-        token: createToken(user, secret, '1d'),
+        token,
         me: user,
       };
     },

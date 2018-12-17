@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 
 
-const user = (sequelize, DataTypes) => {
+export default (sequelize, DataTypes) => {
   const User = sequelize.define('user', {
     id: {
       type: DataTypes.UUID,
@@ -40,10 +40,18 @@ const user = (sequelize, DataTypes) => {
         notEmpty: true,
       },
     },
+    balance: {
+      type: DataTypes.INTEGER,
+    },
+    deposit: {
+      type: DataTypes.INTEGER,
+    },
   });
 
   User.associate = models => {
     User.hasMany(models.Message, { onDelete: 'CASCADE' });
+    User.hasMany(models.User, { as: 'players', foreignKey: 'agentId' });
+    User.hasMany(models.Bet, { as: 'bets', onDelete: 'CASCADE' });
   };
 
   User.findByLogin = async login => {
@@ -75,5 +83,3 @@ const user = (sequelize, DataTypes) => {
 
   return User;
 }
-
-export default user;

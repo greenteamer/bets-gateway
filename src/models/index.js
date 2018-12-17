@@ -1,11 +1,6 @@
 import 'dotenv/config';
 import Sequelize from 'sequelize';
 
-console.log('>>>>>>> psql: ', {
-  name: process.env.DATABASE,
-  user: process.env.DATABASE_USER,
-  pass: process.env.DATABASE_PASSWORD,
-})
 
 const sequelize = new Sequelize(
   process.env.DATABASE,
@@ -27,6 +22,8 @@ const sequelize = new Sequelize(
 const models = {
   User: sequelize.import('./user'),
   Message: sequelize.import('./message'),
+  Bet: sequelize.import('./bet'),
+  BetResult: sequelize.import('./betResult'),
 };
 
 Object.keys(models).forEach(key => {

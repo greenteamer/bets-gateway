@@ -21,7 +21,7 @@ export const createUsersWithMessages = async date => {
     },
   );
 
-  await models.User.create(
+  const agent = await models.User.create(
     {
       username: 'agent',
       email: 'hello@robin.com',
@@ -45,6 +45,7 @@ export const createUsersWithMessages = async date => {
       email: 'hello@david.com',
       password: 'qweqwe123',
       role: ROLES.PLAYER,
+      agentId: agent.id,
       messages: [
         {
           text: 'Happy to release ...',
@@ -59,5 +60,24 @@ export const createUsersWithMessages = async date => {
     {
       include: [models.Message],
     },
+  );
+
+  await models.User.create(
+    {
+      username: 'player2',
+      email: 'hello2@david.com',
+      password: 'qweqwe123',
+      role: ROLES.PLAYER,
+    }
+  );
+
+  await models.User.create(
+    {
+      username: 'player3',
+      email: 'hello3@david.com',
+      password: 'qweqwe123',
+      role: ROLES.PLAYER,
+      agentId: agent.id,
+    }
   );
 }
