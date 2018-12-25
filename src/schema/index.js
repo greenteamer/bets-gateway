@@ -4,6 +4,8 @@ import userSchema from './user';
 import messageSchema from './message';
 import betSchema from './bet';
 import betResultSchema from './betResult';
+import sportSchema from './sport';
+import oddSchema from './odd';
 
 
 const linkSchema = gql`
@@ -22,4 +24,12 @@ const linkSchema = gql`
   }
 `;
 
-export default [linkSchema, userSchema, messageSchema, betSchema, betResultSchema];
+export default [
+  linkSchema,
+  userSchema,
+  messageSchema,
+  betSchema,
+  betResultSchema,
+  sportSchema,
+  oddSchema,
+];

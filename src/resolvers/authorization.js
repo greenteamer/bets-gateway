@@ -17,7 +17,7 @@ export const isAdmin = combineResolvers(
 export const authByRoles = rolesList => combineResolvers(
   isAuthenticated,
   (parent, args, { me: { role }}) => { 
-    if (!rolesList.includes(role)) return skip;
+    if (rolesList.includes(role)) return skip;
     return new ForbiddenError('Not permited for your role.')
   },
 );
