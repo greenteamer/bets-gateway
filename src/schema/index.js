@@ -2,9 +2,15 @@ import { gql } from 'apollo-server-express';
 
 import userSchema from './user';
 import messageSchema from './message';
+import betSchema from './bet';
+import betResultSchema from './betResult';
+import sportSchema from './sport';
+import oddSchema from './odd';
 
 
 const linkSchema = gql`
+  scalar Date
+
   type Query {
     _: Boolean
   }
@@ -18,4 +24,12 @@ const linkSchema = gql`
   }
 `;
 
-export default [linkSchema, userSchema, messageSchema];
+export default [
+  linkSchema,
+  userSchema,
+  messageSchema,
+  betSchema,
+  betResultSchema,
+  sportSchema,
+  oddSchema,
+];

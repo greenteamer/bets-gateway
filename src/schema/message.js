@@ -6,15 +6,22 @@ export default gql`
     id: ID!
     text: String!
     user: User!
+    createdAt: Date!
   }
+
+  type CreateMessageType {
+    message: Message!
+    me: User!
+  }
+  
 
   extend type Query {
     messages: [Message!]!
-    message(id: ID!): Message!
+    message(id: ID!): Message
   }
 
   extend type Mutation {
-    createMessage(text: String!): Message!
+    createMessage(text: String!): CreateMessageType!
     deleteMessage(id: ID!): Boolean!
     updateMessage(id: ID!, text: String!): Message
   }

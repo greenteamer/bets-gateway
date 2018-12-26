@@ -4,14 +4,22 @@ import { gql } from 'apollo-server-express';
 export default gql`
   type User {
     id: ID!
+    agentId: ID
     username: String!
     email: String!
     role: String!
     messages: [Message!]
+    players: [User!]
+    bets: [Bet!]
   }
 
   type Token {
     token: String!
+  }
+
+  type AuthType {
+    token: String!
+    me: User!
   }
 
   extend type Query {
@@ -26,12 +34,13 @@ export default gql`
       email: String!
       password: String!
       role: String!
-    ): Token!
+      agentId: ID
+    ): User!
 
     signIn(
       login: String!
       password: String!
-    ): Token!
+    ): AuthType!
 
     deleteUser(id: ID!): Boolean!
   }

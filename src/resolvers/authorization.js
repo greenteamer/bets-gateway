@@ -14,6 +14,14 @@ export const isAdmin = combineResolvers(
   ),
 );
 
+export const authByRoles = rolesList => combineResolvers(
+  isAuthenticated,
+  (parent, args, { me: { role }}) => { 
+    if (rolesList.includes(role)) return skip;
+    return new ForbiddenError('Not permited for your role.')
+  },
+);
+
 export const isMessageOwner = async (parent, { id }, { models, me }) => {
   const message = await models.Message.findById(id, { raw: true });
 
