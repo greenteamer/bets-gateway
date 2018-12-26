@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { AuthenticationError, UserInputError } from 'apollo-server';
 import { combineResolvers } from 'graphql-resolvers';
+import { Op } from 'sequelize';
 
 import { isAdmin, authByRoles } from './authorization';
 import { ROLES } from '../constants';
@@ -41,7 +42,11 @@ export default {
       return await models.User.findById(id);
     },
     users: async (parent, args, { models }) => {
-      return await models.User.findAll();
+      return await models.User.findAll({
+        where: {
+          [Op.or]: [{role: ROLES.AGENT}, {role: ROLES.PLAYER}]
+        }
+      });
     },
   },
 
