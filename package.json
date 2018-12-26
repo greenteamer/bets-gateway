@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon --exec babel-node ./src/index.js",
-    "build": "babel src --out-dir lib"
+    "build": "babel src --out-dir lib",
+    "serve": "pm2 start ./lib/index.js -n buddaberry-gateway"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
