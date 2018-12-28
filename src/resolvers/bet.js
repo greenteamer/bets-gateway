@@ -34,10 +34,27 @@ export default {
           team,
         },
       },
-      { models }
+      { models, me }
     ) => {
-      console.log('>>> create Bet mutation: ', { userId, creatorId, amount, eventId, siteKey, oddIndex, oddType, team });
-      return await models.Bet.create({ userId, creatorId, amount, eventId, siteKey, oddIndex, oddType, team });
+      console.log('>>> create Bet mutation: ', { userId, creatorId: me.id, amount, eventId, siteKey, oddIndex, oddType, team });
+      const bet = models.Bet.build({
+        userId,
+        creatorId: me.id,
+        amount,
+        eventId,
+        siteKey,
+        oddIndex,
+        oddType,
+        team,
+      });
+      const user = await models.User.findById(userId);
+      if (user.available > amount) {
+        await user.update({ available: user.available - amount });
+        await bet.save();
+        console.log('>>> user: ', { user: user })
+        return user;
+      }
+      throw Error('You have insufficient funds');
     }
   },
 }

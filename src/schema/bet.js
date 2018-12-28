@@ -31,6 +31,6 @@ export default gql`
   }
 
   extend type Mutation {
-    createBet(input: CreateBetInput!): Bet
+    createBet(input: CreateBetInput!): User
   }
 `;
