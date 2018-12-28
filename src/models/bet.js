@@ -20,6 +20,34 @@ export default (sequelize, DataTypes) => {
       },
     },
     eventId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    siteKey: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    oddType: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    oddIndex: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    team: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -27,6 +55,17 @@ export default (sequelize, DataTypes) => {
       },
     },
   });
+
+    // id: ID!
+    // userId: ID!
+    // creatorId: ID!
+    // amount: Int!
+    // eventId: ID!
+    // result: BetResult
+    // siteKey: String!
+    // oddType: String!
+    // oddIndex: Int!
+    // team: String!
 
   Bet.associate = models => {
     Bet.belongsTo(models.User);

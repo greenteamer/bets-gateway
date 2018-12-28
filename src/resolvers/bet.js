@@ -20,8 +20,24 @@ export default {
   },
 
   Mutation: {
-    createBet: async (parent, { userId, creatorId, amount, eventId }, { models }) => {
-      return await models.Bet.create({ userId, creatorId, amount, eventId });
+    createBet: async (
+      parent,
+      {
+        input: {
+          userId,
+          creatorId,
+          amount,
+          eventId,
+          siteKey,
+          oddType,
+          oddIndex,
+          team,
+        },
+      },
+      { models }
+    ) => {
+      console.log('>>> create Bet mutation: ', { userId, creatorId, amount, eventId, siteKey, oddIndex, oddType, team });
+      return await models.Bet.create({ userId, creatorId, amount, eventId, siteKey, oddIndex, oddType, team });
     }
   },
 }

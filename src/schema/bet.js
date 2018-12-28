@@ -6,8 +6,12 @@ export default gql`
     userId: ID!
     creatorId: ID!
     amount: Int!
-    eventId: String!
+    eventId: ID!
     result: BetResult
+    siteKey: String!
+    oddType: String!
+    oddIndex: Int!
+    team: String!
   }
 
   extend type Query {
@@ -15,7 +19,18 @@ export default gql`
     bets: [Bet!]
   }
 
+  input CreateBetInput {
+    userId: ID!
+    creatorId: ID!
+    amount: Int!
+    eventId: ID!
+    siteKey: String!
+    oddType: String!
+    oddIndex: Int!
+    team: String!
+  }
+
   extend type Mutation {
-    createBet(userId: ID!, creatorId: ID!, amount: Int!, eventId: String!): Bet
+    createBet(input: CreateBetInput!): Bet
   }
 `;
