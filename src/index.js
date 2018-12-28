@@ -50,7 +50,7 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app, path: '/graphql' });
 
-const eraseDatabaseOnSync = true;
+const eraseDatabaseOnSync = false;
 
 sequelize.sync({ force: eraseDatabaseOnSync })
   .then(async () => {

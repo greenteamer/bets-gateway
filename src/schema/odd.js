@@ -13,6 +13,7 @@ export default gql`
   }
 
   type Odd {
+    id: ID!
     sport_key: String!
     sport_nice: String!
     teams: [String!]

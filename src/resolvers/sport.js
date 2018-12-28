@@ -10,7 +10,8 @@ import sports from '../mock/sports';
 export default {
   Query: {
     sports: async (parent, args, { models }) => {
-      return await sports.data;
+      // return await sports.data;
+      return await models.Sport.findAll();
     },
   },
 }
