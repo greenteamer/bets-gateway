@@ -8,7 +8,7 @@ import jwt from 'jsonwebtoken';
 import schema from './schema';
 import resolvers from './resolvers';
 import models, { sequelize } from './models';
-import { createUsersWithMessages } from './syncDB';
+import { createUsersWithMessages, populateSportsDB, populateOddsDB } from './syncDB';
 
 
 const app = express();
@@ -50,12 +50,14 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app, path: '/graphql' });
 
-const eraseDatabaseOnSync = false;
+const eraseDatabaseOnSync = true;
 
 sequelize.sync({ force: eraseDatabaseOnSync })
   .then(async () => {
     if (eraseDatabaseOnSync) {
       createUsersWithMessages(new Date());
+      populateSportsDB();
+      populateOddsDB();
     }
     app.listen({ port: 5000 }, () => {
       console.log('Apollo Server on http://localhost:5000/graphql');

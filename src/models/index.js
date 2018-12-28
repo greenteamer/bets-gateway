@@ -22,6 +22,8 @@ const sequelize = new Sequelize(
 const models = {
   User: sequelize.import('./user'),
   Message: sequelize.import('./message'),
+  Sport: sequelize.import('./sport'),
+  Odd: sequelize.import('./odd'),
   Bet: sequelize.import('./bet'),
   BetResult: sequelize.import('./betResult'),
 };

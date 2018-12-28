@@ -1,5 +1,9 @@
+import { forEach } from 'lodash';
+
 import models, { sequelize } from './models';
 import { ROLES } from './constants';
+import odds from './mock/odds';
+import sports from './mock/sports';
 
 
 export const createUsersWithMessages = async date => {
@@ -80,4 +84,15 @@ export const createUsersWithMessages = async date => {
       agentId: agent.id,
     }
   );
+};
+
+export const populateSportsDB = async () => {
+  if (sports && sports.data) {
+    await models.Sport.bulkCreate(sports.data);
+  }
+}
+export const populateOddsDB = async () => {
+  if (odds && odds.data) {
+    await models.Odd.bulkCreate(odds.data);
+  }
 }
