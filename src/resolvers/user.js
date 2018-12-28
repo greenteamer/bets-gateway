@@ -3,7 +3,7 @@ import { AuthenticationError, UserInputError } from 'apollo-server';
 import { combineResolvers } from 'graphql-resolvers';
 import { Op } from 'sequelize';
 
-import { isAdmin, authByRoles } from './authorization';
+import { isAdmin, authByRoles, isPlayerOwner } from './authorization';
 import { ROLES } from '../constants';
 
 
@@ -106,6 +106,16 @@ export default {
         return await models.User.destroy({
           where: { id },
         });
+      },
+    ),
+
+    updateAvailable: combineResolvers(
+      isPlayerOwner,
+      async (parent, { input: { value, userId } }, { models, me }) => {
+        console.log('>>>> update: ', { value, userId })
+        const user = await models.User.findById(userId);
+        user.available = value;
+        return await user.save();
       },
     ),
   },

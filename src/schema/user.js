@@ -11,6 +11,9 @@ export default gql`
     messages: [Message!]
     players: [User!]
     bets: [Bet!]
+    balance: Int
+    available: Int
+    atRisk: Int
   }
 
   type Token {
@@ -28,6 +31,11 @@ export default gql`
     users: [User!]
   }
 
+  input UpdateAvailableInput {
+    value: Int!
+    userId: ID!
+  }
+
   extend type Mutation {
     signUp(
       username: String!
@@ -43,6 +51,8 @@ export default gql`
     ): AuthType!
 
     deleteUser(id: ID!): Boolean!
+
+    updateAvailable(input: UpdateAvailableInput!): User
   }
 
 `;

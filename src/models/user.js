@@ -42,9 +42,18 @@ export default (sequelize, DataTypes) => {
     },
     balance: {
       type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
     },
-    deposit: {
+    available: {
       type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    atRisk: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
     },
   });
 
